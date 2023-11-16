@@ -10,7 +10,6 @@ GET http://localhost:8080/api/get?gender=Male
 
 ### PUT a new document
 PUT http://localhost:8080/api/put
-Content-Type: application/json
 
 {
   "first_name": "John",
@@ -33,9 +32,8 @@ Content-Type: application/json
 }
 
 
-# DELETE a document
+### DELETE a document
 DELETE http://localhost:8080/api/delete
-Content-Type: application/json
 
 {
   "email": "john.doe@dummy.com"

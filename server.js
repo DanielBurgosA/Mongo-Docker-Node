@@ -9,8 +9,8 @@ const {promisify} = require('util');
 const { log } = require('console');
 const MongoClient = require ('mongodb').MongoClient;
 
-// const url = 'mongodb://mongodb-container:27017'
-const url = 'mongodb://localhost:27017/';
+const url = 'mongodb://mongodbINESDI:27017'
+// const url = 'mongodb://localhost:27017/';
 const db_name = 'mock_databe';
 const collectionName = 'users';
 
@@ -78,11 +78,10 @@ app.put('/api/put/', async (req, res) => {
         if (existingDocument) {
             const updatedDocument = { $set: newData };
             await collection.updateOne({ email: email }, updatedDocument);
-            res.status(200).send("Documento actualizado con éxito."); // 200 OK
+            res.status(200).send("Documento actualizado con éxito."); 
         } else {
-            // Si el documento no existe, crea uno nuevo con los datos proporcionados
             await collection.insertOne(newData);
-            res.status(201).send("Nuevo documento creado."); // 201 Created
+            res.status(201).send("Nuevo documento creado."); 
         }
 
         client.close();
@@ -92,9 +91,30 @@ app.put('/api/put/', async (req, res) => {
     }
 });
 
+
+
 /* DELETE method. Modifying the message based on certain field(s).
 If not found, do nothing. (204 No Content)
 If found, document deleted (200 OK) */
+
+app.delete('/api/delete/', async (req, res) => {
+    const email = req.body.email;
+
+    try {
+        const client = await MongoClient.connect(url);
+        const dbo = client.db(db_name);
+        const collection = dbo.collection(collectionName);
+        const deletedDocument = await collection.deleteOne({ email: email });
+
+        console.log(deletedDocument.deletedCount);
+        deletedDocument.deletedCount > 0 ? res.status(200).send("Documento eliminado.") : res.status(204).send("No se encontró ningún documento para eliminar.") 
+       
+        client.close();
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(`Error: ${error.message}`);
+    }
+});
 // ...
 
 app.listen(port, hostname);
