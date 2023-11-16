@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodbINESDI
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./db_sample:/docker-entrypoint-initdb.d
+    networks:
+      - node-network
+      
+  node-app:
+    build: .
+    image: node-app
+    container_name: node-app
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mongodb
+    networks:
+      - node-network
+
+networks:
+  node-network:
+    driver: bridge

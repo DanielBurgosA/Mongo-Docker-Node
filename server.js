@@ -5,8 +5,6 @@ const bodyParser = require('body-parser')
 const app = express();
 
 //mongoClient
-const {promisify} = require('util');
-const { log } = require('console');
 const MongoClient = require ('mongodb').MongoClient;
 
 const url = 'mongodb://mongodbINESDI:27017'
